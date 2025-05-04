@@ -1,0 +1,24 @@
+package main
+
+import (
+	"encoding/json"
+	"net/http"
+)
+
+func main() {
+	http.HandleFunc("GET /helloworld", HelloWorld) //es como el server responderà una peticion http de client
+ // /helloworld es la ruta donde se "esta" lo q se pide ejecutar ,,, HelloWorld es la funcion que llevarà a cabo por la peticion GET...
+	http.ListenAndServe(":8080", nil)
+}
+
+func HelloWorld(w http.ResponseWriter, r *http.Request) {// funcion handler
+
+	respuesta, err := json.Marshal("Hola! Como andas?")
+	if err != nil {
+		http.Error(w, "Error al codificar los datos como JSON", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(respuesta)
+}
